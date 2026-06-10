@@ -24,7 +24,10 @@ def list_idc_users(IdentityStoreId):
         paginator = p.paginate(IdentityStoreId=IdentityStoreId)
         all_users = []
         for page in paginator:
-            all_users.extend(page["Users"])
+            for user in page["Users"]:
+                user.pop("CreatedAt", None)
+                user.pop("UpdatedAt", None)
+                all_users.append(user)
         return sorted(all_users, key=itemgetter('UserName'))
     except ClientError as e:
         print(e.response['Error']['Message'])
